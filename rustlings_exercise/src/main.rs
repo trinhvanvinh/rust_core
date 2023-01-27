@@ -26,9 +26,8 @@ fn main() {
 //     println!("{}", res);
 // }
 
-
 //=== clippy3===
-use std::mem::swap;
+/*use std::mem::swap;
 #[allow(unused_variables, unused_assignments)]
 fn main() {
     let my_option: Option<()> = None;
@@ -51,4 +50,28 @@ fn main() {
     swap(&mut value_a,&mut value_b);
     println!("value a: {}; value b: {}",  value_a,     value_b);
 
+}*/
+
+// === conversions ===
+// == as_ref_mut==
+
+fn byte_counter<T: AsRef<str>>(arg: T) -> usize {
+    arg.as_ref().as_bytes().len()
+}
+
+fn char_counter<T: AsRef<str>>(arg: T) -> usize {
+    arg.as_ref().chars().count()
+}
+
+fn num_sq<T: AsMut<usize>>(arg: &mut T) -> usize {
+    arg.as_mut().pow(2)
+}
+
+fn main() {
+    let s = "verdex ";
+    //let s = String::from("verdex ");
+    println!("count {:?}, {:?}", byte_counter(s), char_counter(s));
+
+    let mut num = Box::new(4);
+    println!("num_square {:?}", num_sq(&mut num));
 }
