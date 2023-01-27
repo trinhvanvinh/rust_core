@@ -78,7 +78,7 @@ fn main() {
 
 // === from_into ===
 
-#[derive(Debug)]
+/*#[derive(Debug)]
 struct Person {
     name: String,
     age: usize,
@@ -119,4 +119,52 @@ fn main() {
     let p2: Person = "Gerald,70".into();
     println!("{:?}", p1);
     println!("{:?}", p2);
+}*/
+
+// === from_str ===
+use std::num::ParseIntError;
+use std::str::FromStr;
+
+#[derive(Debug)]
+struct Person {
+    name: String,
+    age: usize,
+}
+
+#[derive(Debug)]
+enum ParsePersonError {
+    Empty,
+    BadLen,
+    NoName,
+    ParseInt(ParseIntError),
+}
+
+impl FromStr for Person {
+    type Err = ParsePersonError;
+    fn from_str(s: &str) -> Result<Person, Self::Err> {
+        if s.is_empty() {
+            return Err(Self::Err::Empty);
+        }
+        let name_age: Vec<&str> = s.split(',').collect();
+        println!("len {:?}", name_age.len());
+
+        if name_age.len() != 2 {
+            return Err(Self::Err::BadLen);
+        }
+
+        let name = name_age[0].to_string();
+        if name.is_empty() {
+            return Err(Self::Err::NoName);
+        }
+        let age = name_age[1].parse::<usize>();
+        match age {
+            Ok(age) => Ok(Person { name, age }),
+            Err(err) => Err(Self::Err::ParseInt(err)),
+        }
+    }
+}
+
+fn main() {
+    let p = "Mark,20".parse::<Person>().unwrap();
+    println!("{:?}", p);
 }
