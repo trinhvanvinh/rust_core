@@ -55,7 +55,7 @@ fn main() {
 // === conversions ===
 // == as_ref_mut==
 
-fn byte_counter<T: AsRef<str>>(arg: T) -> usize {
+/*fn byte_counter<T: AsRef<str>>(arg: T) -> usize {
     arg.as_ref().as_bytes().len()
 }
 
@@ -74,4 +74,49 @@ fn main() {
 
     let mut num = Box::new(4);
     println!("num_square {:?}", num_sq(&mut num));
+}*/
+
+// === from_into ===
+
+#[derive(Debug)]
+struct Person {
+    name: String,
+    age: usize,
+}
+
+impl Default for Person {
+    fn default() -> Self {
+        Self {
+            name: String::from("John"),
+            age: 30,
+        }
+    }
+}
+
+impl From<&str> for Person {
+    fn from(s: &str) -> Person {
+        if let Some((name, age)) = s.split_once(',') {
+            if name.is_empty() {
+                Person::default()
+            } else {
+                if let Ok(age) = age.parse::<usize>() {
+                    Person {
+                        name: String::from(name),
+                        age,
+                    }
+                } else {
+                    Person::default()
+                }
+            }
+        } else {
+            Person::default()
+        }
+    }
+}
+
+fn main() {
+    let p1 = Person::from("Mark,20");
+    let p2: Person = "Gerald,70".into();
+    println!("{:?}", p1);
+    println!("{:?}", p2);
 }
