@@ -261,7 +261,7 @@ fn main() {
 }*/
 
 // === using_as ===
-fn average(values: &[f64]) -> f64 {
+/*fn average(values: &[f64]) -> f64 {
     let total = values.iter().sum::<f64>();
     total / values.len() as f64
 }
@@ -269,4 +269,22 @@ fn average(values: &[f64]) -> f64 {
 fn main() {
     let values = [3.5, 0.3, 13.0, 11.7];
     println!("{}", average(&values));
+}*/
+
+// +++ ENUM +++
+// === enums1===
+
+#[derive(Debug)]
+enum Message {
+    Quit,
+    Echo,
+    Move,
+    ChangeColor,
+}
+
+fn main() {
+    println!("{:?}", Message::Quit);
+    println!("{:?}", Message::Echo);
+    println!("{:?}", Message::Move);
+    println!("{:?}", Message::ChangeColor);
 }
