@@ -122,7 +122,7 @@ fn main() {
 }*/
 
 // === from_str ===
-use std::num::ParseIntError;
+/*use std::num::ParseIntError;
 use std::str::FromStr;
 
 #[derive(Debug)]
@@ -167,4 +167,95 @@ impl FromStr for Person {
 fn main() {
     let p = "Mark,20".parse::<Person>().unwrap();
     println!("{:?}", p);
+}*/
+
+// === try_from_into ===
+use std::convert::{TryFrom, TryInto};
+
+#[derive(Debug)]
+struct Color {
+    red: u8,
+    green: u8,
+    blue: u8,
+}
+
+#[derive(Debug)]
+enum IntoColorError {
+    BadLen,
+    IntConversion,
+}
+// tuple implement
+impl TryFrom<(i16, i16, i16)> for Color {
+    type Error = IntoColorError;
+
+    fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {
+        let red = tuple.0;
+        let green = tuple.1;
+        let blue = tuple.2;
+
+        if is_rgb(&red) && is_rgb(&green) && is_rgb(&blue) {
+            Ok(Color {
+                red: red as u8,
+                green: green as u8,
+                blue: blue as u8,
+            })
+        } else {
+            Err(Self::Error::IntConversion)
+        }
+    }
+}
+// array implement
+impl TryFrom<[i16; 3]> for Color {
+    type Error = IntoColorError;
+    fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {
+        if arr.into_iter().all(is_rgb) {
+            return Ok(Color {
+                red: arr[0] as u8,
+                green: arr[1] as u8,
+                blue: arr[2] as u8,
+            });
+        }
+        return Err(Self::Error::IntConversion);
+    }
+}
+// slice implement
+impl TryFrom<&[i16]> for Color {
+    type Error = IntoColorError;
+
+    fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {
+        if slice.len() != 3 {
+            return Err(Self::Error::BadLen);
+        }
+        if slice.into_iter().all(is_rgb) {
+            return Ok(Color {
+                red: slice[0] as u8,
+                green: slice[1] as u8,
+                blue: slice[2] as u8,
+            });
+        }
+        return Err(Self::Error::IntConversion);
+    }
+}
+
+fn is_rgb(color: &i16) -> bool {
+    if *color >= 0 && *color <= 255 {
+        true
+    } else {
+        false
+    }
+}
+
+fn main() {
+    let c1 = Color::try_from((183, 65, 14));
+    println!("{:?}", c1);
+
+    let c2: Result<Color, _> = [183, 65, 14].try_into();
+    println!("{:?}", c2);
+
+    let v = vec![183, 65, 14];
+    let c3 = Color::try_from(&v[..]);
+    println!("{:?}", c3);
+
+    let c4: Result<Color, _> = (&v[..]).try_into();
+    println!("{:?}", c4);
 }
