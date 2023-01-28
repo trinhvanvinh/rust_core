@@ -170,7 +170,7 @@ fn main() {
 }*/
 
 // === try_from_into ===
-use std::convert::{TryFrom, TryInto};
+/*use std::convert::{TryFrom, TryInto};
 
 #[derive(Debug)]
 struct Color {
@@ -258,4 +258,15 @@ fn main() {
 
     let c4: Result<Color, _> = (&v[..]).try_into();
     println!("{:?}", c4);
+}*/
+
+// === using_as ===
+fn average(values: &[f64]) -> f64 {
+    let total = values.iter().sum::<f64>();
+    total / values.len() as f64
+}
+
+fn main() {
+    let values = [3.5, 0.3, 13.0, 11.7];
+    println!("{}", average(&values));
 }
