@@ -290,7 +290,7 @@ fn main() {
 }*/
 
 // === enum2 ===
-#[derive(Debug)]
+/*#[derive(Debug)]
 enum Message {
     Move { x: i32, y: i32 },
     Echo(String),
@@ -313,5 +313,51 @@ fn main() {
     ];
     for message in &messages {
         message.call();
+    }
+}*/
+
+// === enum3 ===
+enum Message {
+    ChangeColor((u8, u8, u8)),
+    Echo(String),
+    Move(Point),
+    Quit,
+}
+
+struct Point {
+    x: u8,
+    y: u8,
+}
+
+struct State {
+    color: (u8, u8, u8),
+    position: Point,
+    quit: bool,
+}
+
+impl State {
+    fn change_color(&mut self, color: (u8, u8, u8)) {
+        self.color = color;
+    }
+
+    fn quit(&mut self) {
+        self.quit = true;
+    }
+
+    fn echo(&self, s: String) {
+        println!("{}", s);
+    }
+
+    fn move_position(&mut self, p: Point) {
+        self.position = p;
+    }
+
+    fn process(&mut self, message: Message) {
+        match message {
+            Message::ChangeColor(color) => self.change_color(color),
+            Message::Echo(e) => self.echo(e),
+            Message::Move(point) => self.point(point),
+            Message::Quit => self.quit(),
+        }
     }
 }
