@@ -409,7 +409,7 @@ pub fn total_cost(item_quantity: &str) -> Result<i32, ParseIntError> {
 
 // === exercise 4 ===
 
-#[derive(Debug)]
+/*#[derive(Debug)]
 struct PositiveNonzeroInteger(u64);
 
 #[derive(Debug)]
@@ -429,5 +429,57 @@ impl PositiveNonzeroInteger {
         }
 
         Ok(PositiveNonzeroInteger(value as u64))
+    }
+}*/
+
+//=== error6 ===
+use std::num::ParseIntError;
+
+#[derive(Debug)]
+enum ParsePosNonzeroError {
+    Creation(CreationError),
+    ParseInt(ParseIntError),
+}
+
+impl ParsePosNonzeroError {
+    fn from_creation(err: CreationError) -> ParsePosNonzeroError {
+        ParsePosNonzeroError::Creation(err)
+    }
+    fn from_parseint(err: ParseIntError) -> ParsePosNonzeroError {
+        ParsePosNonzeroError::ParseInt(err)
+    }
+}
+
+fn parse_pos_nonzero(s: &str) -> Result<PositiveNonzeroInteger, ParsePosNonzeroError> {
+    let x: i64 = s.parse().map_err(ParsePosNonzeroError::from_parseint)?;
+    PositiveNonzeroInteger::new(x).map_err(ParsePosNonzeroError::from_creation)
+}
+
+#[derive(Debug)]
+struct PositiveNonzeroInteger(u64);
+
+#[derive(Debug)]
+enum CreationError {
+    Negative,
+    Zero,
+}
+
+impl PositiveNonzeroInteger {
+    fn new(value: i64) -> Result<PositiveNonzeroInteger, CreationError> {
+        /*if value < 0 {
+            return Err(CreationError::Negative);
+        }
+
+        if value == 0 {
+            return Err(CreationError::Zero);
+        }
+
+        Ok(PositiveNonzeroInteger(value as u64))*/
+
+        match value {
+            x if x < 0 => Err(CreationError::Negative),
+            x if x == 0 => Err(CreationError::Zero),
+            x => Ok(PositiveNonzeroInteger(x as u64)),
+        }
     }
 }
