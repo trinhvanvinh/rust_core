@@ -317,7 +317,7 @@ fn main() {
 }*/
 
 // === enum3 ===
-enum Message {
+/*enum Message {
     ChangeColor((u8, u8, u8)),
     Echo(String),
     Move(Point),
@@ -359,5 +359,15 @@ impl State {
             Message::Move(point) => self.point(point),
             Message::Quit => self.quit(),
         }
+    }
+}*/
+
+// +++ Error +++
+// === error1 ===
+pub fn generate_nametag_text(name: String) -> Result<String, String> {
+    if name.is_empty() {
+        Err("`name` was empty it must be nonempty ".into())
+    } else {
+        Ok(format!("Hi! My name is {}", name))
     }
 }
