@@ -364,10 +364,20 @@ impl State {
 
 // +++ Error +++
 // === error1 ===
-pub fn generate_nametag_text(name: String) -> Result<String, String> {
+/*pub fn generate_nametag_text(name: String) -> Result<String, String> {
     if name.is_empty() {
         Err("`name` was empty it must be nonempty ".into())
     } else {
         Ok(format!("Hi! My name is {}", name))
     }
+}*/
+
+// === error2 ===
+use std::num::ParseIntError;
+pub fn total_cost(item_quantity: &str) -> Result<i32, ParseIntError> {
+    let processing_fee = 1;
+    let cost_per_item = 5;
+    let qty = item_quantity.parse::<i32>()?;
+
+    Ok(qty * cost_per_item + processing_fee)
 }
