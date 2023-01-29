@@ -383,7 +383,7 @@ pub fn total_cost(item_quantity: &str) -> Result<i32, ParseIntError> {
 }*/
 
 // === error3 ===
-use std::num::ParseIntError;
+/*use std::num::ParseIntError;
 
 fn main() -> Result<(), ParseIntError> {
     let mut tokens = 100;
@@ -405,4 +405,29 @@ pub fn total_cost(item_quantity: &str) -> Result<i32, ParseIntError> {
     let qty = item_quantity.parse::<i32>()?;
 
     Ok(qty * cost_per_item + processing_fee)
+}*/
+
+// === exercise 4 ===
+
+#[derive(Debug)]
+struct PositiveNonzeroInteger(u64);
+
+#[derive(Debug)]
+enum CreationError {
+    Negative,
+    Zero,
+}
+
+impl PositiveNonzeroInteger {
+    fn new(value: i64) -> Result<PositiveNonzeroInteger, CreationError> {
+        if value < 0 {
+            return Err(CreationError::Negative);
+        }
+
+        if value == 0 {
+            return Err(CreationError::Zero);
+        }
+
+        Ok(PositiveNonzeroInteger(value as u64))
+    }
 }
