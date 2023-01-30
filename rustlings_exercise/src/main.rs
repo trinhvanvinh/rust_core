@@ -604,11 +604,164 @@ fn build_scores_table(results: String) -> HashMap<String, Team> {
 }*/
 
 // +++ intro DONE +++
-// +++ iterators +++
-fn main() {
+// +++ iterators 1+++
+/*fn main() {
     let my_fav_fruits = vec!["banana", "custard apple", "avocado", "peach", "raspberry"];
     let mut my_iterable_fav_fruits = my_fav_fruits.iter();
     println!("{:?}", my_iterable_fav_fruits);
     assert_eq!(my_iterable_fav_fruits.next(), Some(&"banana"));
     assert_eq!(my_iterable_fav_fruits.next(), Some(&"custard apple"));
+}*/
+
+// === iterators 2 ===
+
+/*pub fn capitalize_first(input: &str) -> String {
+    let mut c = input.chars();
+    match c.next() {
+        None => String::new(),
+        Some(first) => first.to_uppercase().to_string() + c.as_str(),
+    }
+}
+
+pub fn capitalize_words_vector(words: &[&str]) -> Vec<String> {
+    words.iter().map(|x| capitalize_first(x)).collect()
+}
+
+pub fn capitalize_words_string(words: &[&str]) -> String {
+    capitalize_words_vector(words).join(" ")
+}
+
+fn main() {
+    println!("{:?}", capitalize_first("hello"));
+    println!("{:?}", capitalize_words_vector(&["hello", "world"]));
+    println!("{:?}", capitalize_words_string(&["hello", "world"]));
+}*/
+
+// === iterators 3 ===
+/*#[derive(Debug)]
+pub enum DivisionError {
+    NotDivisible(NotDivisibleError),
+    DivideByZero,
+}
+
+#[derive(Debug)]
+pub struct NotDivisibleError {
+    dividend: i32,
+    divisor: i32,
+}
+
+pub fn divide(a: i32, b: i32) -> Result<i32, DivisionError> {
+    if b == 0 {
+        Err(DivisionError::DivideByZero)
+    } else if a % b != 0 {
+        Err(DivisionError::NotDivisible(NotDivisibleError {
+            dividend: a,
+            divisor: b,
+        }))
+    } else {
+        Ok(a / b)
+    }
+}
+
+fn result_with_list() -> Result<Vec<i32>, DivisionError> {
+    let numbers = vec![27, 297, 38502, 81];
+    numbers.into_iter().map(|n| divide(n, 27)).collect()
+}
+
+fn list_of_results() -> Vec<Result<i32, DivisionError>> {
+    let numbers = vec![27, 297, 38502, 81];
+    numbers.into_iter().map(|n| divide(n, 27)).collect()
+}
+
+fn main() {
+    println!("{:?}", divide(4, 2));
+    println!("{:?}", result_with_list().unwrap());
+    println!("{:?}", list_of_results());
+}*/
+
+// === interators 4 ===
+
+/*pub fn factorial(num: u64) -> u64 {
+    (1..=num).fold(1, |sum, v| sum * v)
+}
+
+fn main() {
+    println!("{:?}", factorial(4));
+}*/
+
+// === iterators 5 ===
+
+use std::collections::HashMap;
+
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+enum Progress {
+    None,
+    Some,
+    Complete,
+}
+
+fn count_for(map: &HashMap<String, Progress>, value: Progress) -> usize {
+    let mut count = 0;
+    for val in map.values() {
+        if val == &value {
+            count += 1;
+        }
+    }
+    count
+}
+
+fn count_iterator(map: &HashMap<String, Progress>, value: Progress) -> usize {
+    map.values().filter(|&v| v == &value).count()
+}
+
+fn count_collection_for(collection: &[HashMap<String, Progress>], value: Progress) -> usize {
+    let mut count = 0;
+    for map in collection {
+        for val in map.values() {
+            if val == &value {
+                count += 1;
+            }
+        }
+    }
+    count
+}
+
+fn count_collection_iterator(collection: &[HashMap<String, Progress>], value: Progress) -> usize {
+    collection.iter().map(|m| count_iterator(&m, value)).sum()
+}
+
+fn get_map() -> HashMap<String, Progress> {
+    use Progress::*;
+
+    let mut map = HashMap::new();
+    map.insert(String::from("variable1"), Complete);
+    map.insert(String::from("variable2"), Some);
+    map.insert(String::from("variable3"), Complete);
+
+    map
+}
+
+fn get_vec_map() -> Vec<HashMap<String, Progress>> {
+    use Progress::*;
+
+    let map = get_map();
+
+    let mut other = HashMap::new();
+
+    other.insert(String::from("vec1"), Complete);
+    other.insert(String::from("vec2"), Some);
+    other.insert(String::from("vec3"), Complete);
+
+    vec![map, other]
+}
+
+fn main() {
+    let map = get_map();
+    let vec_map = get_vec_map();
+    println!("{:?}", count_iterator(&map, Progress::Complete));
+    println!(
+        "{:?}",
+        count_collection_iterator(&vec_map, Progress::Complete)
+    );
+    println!("{:?}", vec_map);
 }
