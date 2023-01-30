@@ -433,7 +433,7 @@ impl PositiveNonzeroInteger {
 }*/
 
 //=== error6 ===
-use std::num::ParseIntError;
+/*use std::num::ParseIntError;
 
 #[derive(Debug)]
 enum ParsePosNonzeroError {
@@ -482,4 +482,133 @@ impl PositiveNonzeroInteger {
             x => Ok(PositiveNonzeroInteger(x as u64)),
         }
     }
+}*/
+
+// +++ HashMap +++
+// === hasmap1 ===
+
+/*use std::collections::HashMap;
+
+fn fruit_basket() -> HashMap<String, u32> {
+    let mut basket = HashMap::new();
+
+    basket.insert(String::from("banana"), 2);
+    basket.insert(String::from("apple"), 3);
+    basket.insert(String::from("mango"), 4);
+
+    basket
+}
+
+fn main() {
+    let basket = fruit_basket();
+    assert_eq!(basket.values().sum::<u32>(), 9);
+}
+*/
+
+// === Hashmap2 ===
+/*use std::collections::HashMap;
+
+#[derive(Eq, Hash, PartialEq)]
+enum Fruit {
+    Apple,
+    Banana,
+    Mango,
+    Lychee,
+    Pineapple,
+}
+
+fn fruit_basket(basket: &mut HashMap<Fruit, u32>) {
+    let fruit_kinds = vec![
+        Fruit::Apple,
+        Fruit::Banana,
+        Fruit::Mango,
+        Fruit::Lychee,
+        Fruit::Pineapple,
+    ];
+    for fruit in fruit_kinds {
+        if !basket.contains_key(&fruit) {
+            basket.insert(fruit, 5);
+        }
+    }
+}*/
+
+// === hashmap3 ===
+
+/*use std::collections::HashMap;
+
+struct Team {
+    name: String,
+    goals_scored: u8,
+    goals_conceded: u8,
+}
+
+fn build_scores_table(results: String) -> HashMap<String, Team> {
+    let mut scores: HashMap<String, Team> = HashMap::new();
+
+    for r in results.lines() {
+        let v: Vec<&str> = r.split(',').collect();
+        let team_1_name = v[0].to_string();
+        let team_1_score: u8 = v[2].parse().unwrap();
+        let team_2_name = v[1].to_string();
+        let team_2_score: u8 = v[3].parse().unwrap();
+
+        scores
+            .entry(team_1_name.clone())
+            .and_modify(|t| {
+                t.goals_scored += team_1_score;
+                t.goals_conceded += team_2_score;
+            })
+            .or_insert(Team {
+                name: team_1_name,
+                goals_scored: team_1_score,
+                goals_conceded: team_2_score,
+            });
+
+        scores
+            .entry(team_2_name.clone())
+            .and_modify(|t| {
+                t.goals_scored += team_2_score;
+                t.goals_conceded += team_1_score;
+            })
+            .or_insert(Team {
+                name: team_2_name,
+                goals_scored: team_2_score,
+                goals_conceded: team_1_score,
+            });
+    }
+    scores
+}*/
+
+// +++ if1 +++
+/*pub fn bigger(a: i32, b: i32) -> i32 {
+    if a < b {
+        b
+    } else {
+        a
+    }
+} */
+
+// +++ if2 +++
+/*pub fn foo_if_fizz(fizzish: &str) -> &str {
+    /*if fizzish == "fizz" {
+        "foo"
+    } else {
+        1
+    }*/
+
+    match fizzish {
+        "fizz" => "foo",
+        "fuzz" => "bar",
+        _ => "baz",
+    }
+}*/
+
+// +++ intro DONE +++
+// +++ iterators +++
+fn main() {
+    let my_fav_fruits = vec!["banana", "custard apple", "avocado", "peach", "raspberry"];
+    let mut my_iterable_fav_fruits = my_fav_fruits.iter();
+    println!("{:?}", my_iterable_fav_fruits);
+    assert_eq!(my_iterable_fav_fruits.next(), Some(&"banana"));
+    assert_eq!(my_iterable_fav_fruits.next(), Some(&"custard apple"));
 }
