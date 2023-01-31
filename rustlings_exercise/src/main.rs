@@ -821,3 +821,33 @@ fn main() {
     };
     println!("{} by {} ", book.title, book.author);
 }*/
+
+// +++ MACROS +++
+// === macros1,3 ===
+/*mod macros {
+    #[macro_export]
+    macro_rules! my_macro {
+        () => {
+            println!("check out my macro!");
+        };
+    }
+}
+
+fn main() {
+    my_macro!();
+}*/
+
+// === macros 4 ===
+macro_rules! my_macro {
+    () => {
+        println!("Check out my macro");
+    };
+    ($val:expr) => {
+        println!("Look at this other macro: {}", $val);
+    };
+}
+
+fn main() {
+    my_macro!();
+    my_macro!(777);
+}
