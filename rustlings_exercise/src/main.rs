@@ -1008,7 +1008,7 @@ fn main() {
 
 // +++ primitive type 1, 2, 3, 4, 5, 6+++
 
-fn main() {
+/*fn main() {
     let is_morning = true;
     if is_morning {
         println!("Good morning");
@@ -1034,4 +1034,21 @@ fn main() {
     let numbers = (1, 2, 3);
     let second = numbers.1;
     println!("second {} ", second);
+}*/
+
+// +++ String 1,2,3, 4 +++
+
+fn trim_me(input: &str) -> String {
+    input.trim().to_string()
 }
+
+fn compose_me(input: &str) -> String {
+    format!("{} world! ", input)
+}
+
+fn replace_me(input: &str) -> String {
+    input.replace("cars", "balloons")
+}
+
+// +++ smart pointer +++
+// === arc1 ===
