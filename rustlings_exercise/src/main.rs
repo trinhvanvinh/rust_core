@@ -937,7 +937,7 @@ fn fill_vec() -> Vec<i32> {
 }*/
 
 // === move_sematic 6===
-fn main() {
+/*fn main() {
     let data = "Rust is great! ".to_string();
     get_char(&data);
     string_uppercase(data);
@@ -951,4 +951,57 @@ fn string_uppercase(mut data: String) {
     data = data.to_uppercase();
 
     println!("{}", data);
+}
+*/
+
+// +++ OPTIONS +++
+// === option1,2 ===
+
+/*fn maybe_icecream(time_of_day: u16) -> Option<u16> {
+    if (0..=24).contains(&time_of_day) {
+        if time_of_day < 22 {
+            Some(5)
+        } else {
+            Some(0)
+        }
+    } else {
+        None
+    }
+}
+
+fn main() {
+    println!("{:?}", maybe_icecream(230));
+
+    let optional_word = Some(String::from("rustlings"));
+    if let Some(word) = optional_word {
+        println!("the word is: {}", word);
+    } else {
+        println!("The optional word doesn't contain anything");
+    }
+
+    let mut optional_integers_vec: Vec<Option<i8>> = Vec::new();
+    for x in 1..10 {
+        optional_integers_vec.push(Some(x));
+    }
+    println!("{:?}", optional_integers_vec);
+
+    while let Some(Some(integer)) = optional_integers_vec.pop() {
+        println!("current value {} ", integer);
+    }
+}*/
+
+//=== option3 ===
+
+struct Point {
+    x: i32,
+    y: i32,
+}
+
+fn main() {
+    let y: Option<Point> = Some(Point { x: 100, y: 200 });
+    match y {
+        Some(ref p) => println!("co-ordinates are {} {} ", p.x, p.y),
+        _ => println!("no match"),
+    }
+    y;
 }
