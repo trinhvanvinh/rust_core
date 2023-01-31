@@ -691,7 +691,7 @@ fn main() {
 
 // === iterators 5 ===
 
-use std::collections::HashMap;
+/*use std::collections::HashMap;
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 enum Progress {
@@ -764,4 +764,60 @@ fn main() {
         count_collection_iterator(&vec_map, Progress::Complete)
     );
     println!("{:?}", vec_map);
+}*/
+
+// +++ lifetimes +++
+// +++ lifetimes1 +++
+
+/*fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
 }
+
+fn main() {
+    let string1 = String::from("ab");
+    let string2 = "xyz";
+
+    let result = longest(string1.as_str(), string2);
+    println!("the longest string is {}", result);
+}
+*/
+
+// +++ lifetimes2 +++
+/*fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+
+fn main() {
+    let string1 = String::from("long string is long");
+    let result;
+    {
+        let string2 = String::from("xyz");
+        result = longest(string1.as_str(), string2.as_str());
+        println!("the longest string is {}", result);
+    }
+}*/
+
+// === lifetime3 ===
+
+/*struct Book<'a> {
+    author: &'a str,
+    title: &'a str,
+}
+
+fn main() {
+    let name = String::from("Jill Smith");
+    let title = String::from("Fish Flying");
+    let book = Book {
+        author: &name,
+        title: &title,
+    };
+    println!("{} by {} ", book.title, book.author);
+}*/
