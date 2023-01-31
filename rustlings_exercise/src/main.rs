@@ -1038,7 +1038,7 @@ fn main() {
 
 // +++ String 1,2,3, 4 +++
 
-fn trim_me(input: &str) -> String {
+/*fn trim_me(input: &str) -> String {
     input.trim().to_string()
 }
 
@@ -1048,7 +1048,51 @@ fn compose_me(input: &str) -> String {
 
 fn replace_me(input: &str) -> String {
     input.replace("cars", "balloons")
+}*/
+
+// +++ struct +++
+// === struct 1 ===
+/*struct ColorClassicStruct {
+    red: u8,
+    green: u8,
+    blue: u8,
 }
+
+struct ColorTupleStruct(u8, u8, u8);
+
+struct UnitLikeStruct;*/
+
+// +++ traits +++
+// === traits1, 2 ===
+
+use std::vec;
+
+trait AppendBar {
+    fn append_bar(self) -> Self;
+}
+
+impl AppendBar for Vec<String> {
+    // fn append_bar(self) -> Self {
+    //     self + "Bar"
+    // }
+
+    fn append_bar(mut self) -> Self {
+        self.push(String::from("Bar"));
+        self
+    }
+}
+
+fn main() {
+    // let s = String::from("Foo");
+    // let s = s.append_bar();
+
+    let mut foo = vec![String::from("Foo")].append_bar();
+
+    println!("s:{:?}", foo.pop());
+    println!("s:{:?}", foo.pop());
+}
+
+// +++ threads +++
 
 // +++ smart pointer +++
 // === arc1 ===
