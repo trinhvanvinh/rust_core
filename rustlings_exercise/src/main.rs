@@ -896,11 +896,59 @@ fn main() {
 
 // === modules3 ===
 
-use std::time::{SystemTime, UNIX_EPOCH};
+/*use std::time::{SystemTime, UNIX_EPOCH};
 
 fn main() {
     match SystemTime::now().duration_since(UNIX_EPOCH) {
         Ok(n) => println!("aaa {}", n.as_secs()),
         Err(_) => panic!("Systemtime befor UNIX_EPOCH"),
     }
+}*/
+
+// +++ MOVE SEMANTICS +++
+// === move_semantics1, 2, 3, 4 ===
+/*fn main() {
+    //let vec0 = Vec::new();
+    let mut vec1 = fill_vec();
+
+    println!("{} has length {} content {:?}", "vec1", vec1.len(), vec1);
+    vec1.push(88);
+    println!("{} has length {} content {:?}", "vec1", vec1.len(), vec1);
+}
+
+fn fill_vec() -> Vec<i32> {
+    let mut vec = vec![];
+    vec.push(22);
+    vec.push(44);
+    vec.push(66);
+
+    vec
+}*/
+
+// === Move_sematic 5 ===
+/*fn main() {
+    let mut x = 100;
+    let y = &mut x;
+    *y += 100;
+    let z = &mut x;
+
+    *z += 1000;
+    assert_eq!(x, 1200);
+}*/
+
+// === move_sematic 6===
+fn main() {
+    let data = "Rust is great! ".to_string();
+    get_char(&data);
+    string_uppercase(data);
+}
+
+fn get_char(data: &String) -> char {
+    data.chars().last().unwrap()
+}
+
+fn string_uppercase(mut data: String) {
+    data = data.to_uppercase();
+
+    println!("{}", data);
 }
