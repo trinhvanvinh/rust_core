@@ -838,7 +838,7 @@ fn main() {
 }*/
 
 // === macros 4 ===
-macro_rules! my_macro {
+/*macro_rules! my_macro {
     () => {
         println!("Check out my macro");
     };
@@ -850,4 +850,57 @@ macro_rules! my_macro {
 fn main() {
     my_macro!();
     my_macro!(777);
+}*/
+
+// +++ MODULES +++
+// === module 1 ===
+
+/*mod sausage_factory {
+    fn get_secret_recipe() -> String {
+        String::from("Ginger")
+    }
+
+    pub fn make_sausage() {
+        get_secret_recipe();
+        println!("sausage!");
+    }
+}
+
+fn main() {
+    sausage_factory::make_sausage();
+}*/
+
+// === modules2 ===
+/*mod delicious_snacks {
+    pub use self::fruits::PEAR as fruit;
+    pub use self::veggies::CUCUMBER as veggie;
+
+    mod fruits {
+        pub const PEAR: &'static str = "Pear";
+        pub const APPLE: &'static str = "Apple";
+    }
+
+    mod veggies {
+        pub const CUCUMBER: &'static str = "Cucumber";
+        pub const CARROT: &'static str = "Carrot";
+    }
+}
+
+fn main() {
+    println!(
+        "favorite snacks: {} and {} ",
+        delicious_snacks::fruit,
+        delicious_snacks::veggie
+    );
+}*/
+
+// === modules3 ===
+
+use std::time::{SystemTime, UNIX_EPOCH};
+
+fn main() {
+    match SystemTime::now().duration_since(UNIX_EPOCH) {
+        Ok(n) => println!("aaa {}", n.as_secs()),
+        Err(_) => panic!("Systemtime befor UNIX_EPOCH"),
+    }
 }
