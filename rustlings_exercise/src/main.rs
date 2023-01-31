@@ -992,7 +992,7 @@ fn main() {
 
 //=== option3 ===
 
-struct Point {
+/*struct Point {
     x: i32,
     y: i32,
 }
@@ -1004,4 +1004,34 @@ fn main() {
         _ => println!("no match"),
     }
     y;
+}*/
+
+// +++ primitive type 1, 2, 3, 4, 5, 6+++
+
+fn main() {
+    let is_morning = true;
+    if is_morning {
+        println!("Good morning");
+    } else {
+        println!("Good evening");
+    }
+
+    let a = [0; 100];
+    if a.len() >= 100 {
+        println!("wow that big arr");
+    } else {
+        println!("meh, I eat arr");
+    }
+
+    let a = [1, 2, 3, 4, 5];
+    let nice_slice = &a[1..4];
+    println!("{:?}", nice_slice);
+
+    let cat = ("Furry McFurson", 3.5);
+    let (name, age) = cat;
+    println!("{} is {} years old", name, age);
+
+    let numbers = (1, 2, 3);
+    let second = numbers.1;
+    println!("second {} ", second);
 }
