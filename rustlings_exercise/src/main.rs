@@ -1091,12 +1091,38 @@ fn main() {
     println!("s:{:?}", foo.pop());
     println!("s:{:?}", foo.pop());
 }*/
+<<<<<<< HEAD
+=======
+
+// +++ vecs2 +++
+
+/*fn vec_loop(mut v: Vec<i32>) -> Vec<i32> {
+    for i in v.iter_mut() {
+        *i = *i * 2;
+    }
+    v
+}
+>>>>>>> 6fba8106af930d3e51d0bf6131652df1050aaad1
+
+fn vec_map(v: &Vec<i32>) -> Vec<i32> {
+    v.iter()
+        .map(|num| {
+            return num * 2;
+        })
+        .collect()
+}
+
+fn main() {
+    println!("{:?}", vec_loop(vec![1, 2, 3, 4, 5]));
+    println!("{:?}", vec_map(&vec![1, 2, 3, 4, 5]));
+}*/
 
 // +++ threads +++
 
 // +++ smart pointer +++
 // === arc1 ===
 
+<<<<<<< HEAD
 /*fn used_function() {
     println!("used");
 }
@@ -1151,5 +1177,55 @@ fn main() {
         // Note again the lack of scoping.
         Civilian => println!("Civilians work!"),
         Soldier => println!("Soldiers fight!"),
+=======
+// +++ QUIZ1 +++
+fn calculate_price_of_apples(num: i32) -> i32 {
+    if num >= 40 {
+        num
+    } else {
+        num * 2
+    }
+}
+
+//+++ QUIZ 2 +++
+pub enum Command {
+    Uppercase,
+    Trim,
+    Append(usize),
+}
+
+//mod my_module {
+    //use super::Command;
+
+    pub fn transformer(input: Vec<(String, Command)>) -> Vec<String> {
+        let mut output = vec![];
+        for (string, command) in input.iter() {
+            match command {
+                Command::Uppercase => output.push(string.to_uppercase()),
+                Command::Trim => output.push(string.trim().into()),
+                Command::Append(x) => output.push(string.to_owned() + "bar"),
+            }
+        }
+        output
+    }
+//}
+| 
+// fn main() {
+//     //use crate::my_module::transformer;
+//     //use super::my_module::transformer;
+//     println!("{:?}", transformer(vec!["vinh".into(), Command::Uppercase]));
+// }
+
+// +++ quiz 3 +++
+pub struct ReportCard<T>{
+    pub grade: T,
+    pub student_name: String,
+    pub student_age: u8
+}
+
+impl ReportCard<T>{
+    pub fn print(&self)-> String{
+        format!("{} ({}) - achieved a grade of {}", &self.student_name, &self.student_age, &self.grade)
+>>>>>>> 6fba8106af930d3e51d0bf6131652df1050aaad1
     }
 }
