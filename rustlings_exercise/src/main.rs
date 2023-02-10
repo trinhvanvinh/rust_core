@@ -1091,18 +1091,14 @@ fn main() {
     println!("s:{:?}", foo.pop());
     println!("s:{:?}", foo.pop());
 }*/
-<<<<<<< HEAD
-=======
 
 // +++ vecs2 +++
 
 /*fn vec_loop(mut v: Vec<i32>) -> Vec<i32> {
     for i in v.iter_mut() {
         *i = *i * 2;
-    }
     v
 }
->>>>>>> 6fba8106af930d3e51d0bf6131652df1050aaad1
 
 fn vec_map(v: &Vec<i32>) -> Vec<i32> {
     v.iter()
@@ -1122,62 +1118,6 @@ fn main() {
 // +++ smart pointer +++
 // === arc1 ===
 
-<<<<<<< HEAD
-/*fn used_function() {
-    println!("used");
-}
-
-// `#[allow(dead_code)]` is an attribute that disables the `dead_code` lint
-#[allow(dead_code)]
-fn unused_function() {
-    println!("unused");
-}
-
-fn noisy_unused_function() {
-    println!("noisy");
-}
-// FIXME ^ Add an attribute to suppress the warning
-
-fn main() {
-    used_function();
-    unused_function();
-    noisy_unused_function();
-}*/
-#![allow(dead_code)]
-
-enum Status {
-    Rich,
-    Poor,
-}
-
-enum Work {
-    Civilian,
-    Soldier,
-}
-
-fn main() {
-    // Explicitly `use` each name so they are available without
-    // manual scoping.
-    use crate::Status::{Poor, Rich};
-    // Automatically `use` each name inside `Work`.
-    use crate::Work::*;
-
-    // Equivalent to `Status::Poor`.
-    let status = Poor;
-    // Equivalent to `Work::Civilian`.
-    let work = Civilian;
-
-    match status {
-        // Note the lack of scoping because of the explicit `use` above.
-        Rich => println!("The rich have lots of money!"),
-        Poor => println!("The poor have no money..."),
-    }
-
-    match work {
-        // Note again the lack of scoping.
-        Civilian => println!("Civilians work!"),
-        Soldier => println!("Soldiers fight!"),
-=======
 // +++ QUIZ1 +++
 fn calculate_price_of_apples(num: i32) -> i32 {
     if num >= 40 {
@@ -1226,6 +1166,5 @@ pub struct ReportCard<T>{
 impl ReportCard<T>{
     pub fn print(&self)-> String{
         format!("{} ({}) - achieved a grade of {}", &self.student_name, &self.student_age, &self.grade)
->>>>>>> 6fba8106af930d3e51d0bf6131652df1050aaad1
     }
 }
