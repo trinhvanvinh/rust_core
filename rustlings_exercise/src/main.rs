@@ -1065,7 +1065,7 @@ struct UnitLikeStruct;*/
 // +++ traits +++
 // === traits1, 2 ===
 
-use std::vec;
+/*use std::vec;
 
 trait AppendBar {
     fn append_bar(self) -> Self;
@@ -1090,9 +1090,66 @@ fn main() {
 
     println!("s:{:?}", foo.pop());
     println!("s:{:?}", foo.pop());
-}
+}*/
 
 // +++ threads +++
 
 // +++ smart pointer +++
 // === arc1 ===
+
+/*fn used_function() {
+    println!("used");
+}
+
+// `#[allow(dead_code)]` is an attribute that disables the `dead_code` lint
+#[allow(dead_code)]
+fn unused_function() {
+    println!("unused");
+}
+
+fn noisy_unused_function() {
+    println!("noisy");
+}
+// FIXME ^ Add an attribute to suppress the warning
+
+fn main() {
+    used_function();
+    unused_function();
+    noisy_unused_function();
+}*/
+#![allow(dead_code)]
+
+enum Status {
+    Rich,
+    Poor,
+}
+
+enum Work {
+    Civilian,
+    Soldier,
+}
+
+fn main() {
+    // Explicitly `use` each name so they are available without
+    // manual scoping.
+    use crate::Status::{Poor, Rich};
+    // Automatically `use` each name inside `Work`.
+    use crate::Work::*;
+
+    // Equivalent to `Status::Poor`.
+    let status = Poor;
+    // Equivalent to `Work::Civilian`.
+    let work = Civilian;
+
+    match status {
+        // Note the lack of scoping because of the explicit `use` above.
+        Rich => println!("The rich have lots of money!"),
+        Poor => println!("The poor have no money..."),
+    }
+
+    match work {
+        // Note again the lack of scoping.
+        Civilian => println!("Civilians work!"),
+        Soldier => println!("Soldiers fight!"),
+    }
+}

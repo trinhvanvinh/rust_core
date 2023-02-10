@@ -15,3 +15,6 @@ Cargo.lock
 
 /rustlings_exercise/target
 /rustlings_exercise/Cargo.lock
+
+/substrate-core/target
+/substrate-core/Cargo.lock
