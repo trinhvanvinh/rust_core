@@ -1,0 +1,26 @@
+[package]
+name = "node-template"
+version = "0.1.0"
+edition = "2021"
+
+
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[[bin]]
+name = "node-template"
+
+
+[dependencies]
+clap = { version = "4.0.9", features = ["derive"] }
+
+sc-cli = { version = "0.10.0-dev", git = "https://github.com/paritytech/substrate.git", "branch" = "polkadot-v0.9.36" }
+
+frame-benchmarking = { version = "4.0.0-dev", git = "https://github.com/paritytech/substrate.git", "branch" = "polkadot-v0.9.36" }
+frame-benchmarking-cli = { version = "4.0.0-dev", git = "https://github.com/paritytech/substrate.git", "branch" = "polkadot-v0.9.36" }
+
+
+[build-dependencies]
+substrate-build-script-utils = { version = "3.0.0", git = "https://github.com/paritytech/substrate.git", "branch" = "polkadot-v0.9.36" }
+
+
