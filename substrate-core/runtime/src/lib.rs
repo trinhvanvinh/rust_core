@@ -226,6 +226,7 @@ pub type Executive = frame_executive::Executive<
     AllPalletsWithSystem,
 >;
 
+impl_runtime_apis! {
 impl sp_api::Core<Block> for Runtime {
     fn version() -> RuntimeVersion {}
 
@@ -357,4 +358,5 @@ impl
     ) -> pallet_transaction_payment::FeeDetails<Balance> {
         TransactionPayment::query_call_fee_details(call, len)
     }
+}
 }
