@@ -5,7 +5,9 @@ use sp_api::impl_runtime_apis;
 use sp_consensus_aura::sr25519::AuthorityId as AuraId;
 use sp_core::{crypto::KeyTypeId, OpaqueMetadata, H256};
 use sp_runtime::{
-    create_runtime_str, generic::{self, UncheckedExtrinsic}, impl_opaque_keys,
+    create_runtime_str,
+    generic::{self, UncheckedExtrinsic},
+    impl_opaque_keys,
     traits::{
         AccountIdLookup, BlakeTwo256, Block as BlockT, IdentifyAccount, NumberFor, One, Verify,
     },
@@ -59,20 +61,46 @@ pub const HOURS: BlockNumber = MINUTES * 60;
 pub const DAYS: BlockNumber = HOURS * 24;
 const NORMAL_DISPATH_RATIO: Perbill = Perbill::from_percent(75);
 
-pub const BlockHashCount: BlockNumber = 2400;
-pub const Version: RuntimeVersion = Version;
-pub BlockWeights: frame_system::limits::BlockWeights= frame_system::limits::BlockWeights::with_sensible_defaults(
-    Weight::from_parts(2u64*WEIGHT_REF_TIME_PER_SECOND, u64::MAX),
-    NORMAL_DISPATH_RATIO
-);
-pub BlockLength: frame_system::limits::BlockLength = frame_system::limits::BlockLength
-::max_with_normal_ratio(5*1024*1024, NORMAL_DISPATH_RATIO);
-pub const SS58Prefix: u8 = 42;
+pub mod opaque {
+    use super::*;
+    pub use sp_runtime::OpaqueExtrinsic as UncheckedExtrinsic;
+    pub type Header = generic::Header<BlockNumber, BlakeTwo256>;
+    pub type Block = generic::Block<Header, UncheckedExtrinsic>;
+    pub type BlockId = generic::BlockId<Block>;
+    pub struct SessionKeys {
+        pub aura: Aura,
+        pub grandpa: Grandpa,
+    }
+}
 
+pub const VERSION: RuntimeVersion = RuntimeVersion {
+    spec_name: create_runtime_str!(""),
+    impl_name: create_runtime_str!(""),
+    authoring_version: 1,
+    spec_version: 100,
+    impl_version: 1,
+    apis: RUNTIME_API_VERSIONS,
+    transaction_version: 1,
+    state_version: 1,
+};
+
+parameter_types! {
+    pub const BlockHashCount: BlockNumber = 2400;
+    pub const Version: RuntimeVersion = VERSION;
+
+    pub BlockWeights: frame_system::limits::BlockWeights= frame_system::limits::BlockWeights::with_sensible_defaults(
+        Weight::from_parts(2u64*WEIGHT_REF_TIME_PER_SECOND, u64::MAX),
+        NORMAL_DISPATH_RATIO
+    );
+    pub BlockLength: frame_system::limits::BlockLength = frame_system::limits::BlockLength
+    ::max_with_normal_ratio(5*1024*1024, NORMAL_DISPATH_RATIO);
+    pub const SS58Prefix: u8 = 42;
+    pub FeeMultiplier: Multiplier = Multiplier::one();
+}
 
 impl frame_system::Config for Runtime {
     type BaseCallFilter = frame_support::traits::Everything;
-    type BlockWeights =  BlockWeights;
+    type BlockWeights = BlockWeights;
     type BlockLength = BlockLength;
     type AccountId = AccountId;
     type RuntimeCall = RuntimeCall;
@@ -97,34 +125,35 @@ impl frame_system::Config for Runtime {
     type MaxConsumers = frame_support::traits::ConstU32<16>;
 }
 
-impl pallet_randomness_collective_flip::Config for Runtime{};
+impl pallet_randomness_collective_flip::Config for Runtime {}
 
-impl pallet_aura::Config for Runtime{
+impl pallet_aura::Config for Runtime {
     type AuthorityId = AuraId;
     type DisabledValidators = ();
     type MaxAuthorities = ConstU32<32>;
 }
 
-impl pallet_grandpa::Config for Runtime{
+impl pallet_grandpa::Config for Runtime {
     type RuntimeEvent = RuntimeEvent;
 
     type KeyOwnerProofSystem = ();
-    type KeyOwnerProof = <Self::KeyOwnerProofSystem as KeyOwnerProofSystem<(KeyTypeId, GrandpaId)>>::Proof;
+    type KeyOwnerProof =
+        <Self::KeyOwnerProofSystem as KeyOwnerProofSystem<(KeyTypeId, GrandpaId)>>::Proof;
 
-    type KeyOwnerIdentification = <Self::KeyOwnerProofSystem as KeyOwnerProofSystem<(KeyTypeId, GrandpaId)>>::IdentificationTuple;
+    type KeyOwnerIdentification = <Self::KeyOwnerProofSystem as KeyOwnerProofSystem<(
+        KeyTypeId,
+        GrandpaId,
+    )>>::IdentificationTuple;
 
     type HandleEquivocation = ();
     type WeightInfo = ();
     type MaxAuthorities = ConstU32<32>;
-
-
 }
 
-impl pallet_timestamp::Config for Runtime{
-    
+impl pallet_timestamp::Config for Runtime {
     type Moment = u64;
     type OnTimestampSet = Aura;
-    type MinimumPeriod = ConstU64<{SLOT_DURATION/2}>;
+    type MinimumPeriod = ConstU64<{ SLOT_DURATION / 2 }>;
     type WeightInfo = ();
 }
 
@@ -142,9 +171,7 @@ impl pallet_balances::Config for Runtime {
     type WeightInfo = pallet_balances::weights::SubstrateWeight<Runtime>;
 }
 
-pub FeeMultiplier: Multiplier = Multiplier::one();
-
-impl pallet_transaction_payment::Config for Runtime{
+impl pallet_transaction_payment::Config for Runtime {
     type RuntimeEvent = RuntimeEvent;
     type OnChargeTransaction = CurrencyAdapter<Balances, ()>;
     type OperationalFeeMultiplier = ConstU8<5>;
@@ -153,25 +180,27 @@ impl pallet_transaction_payment::Config for Runtime{
     type FeeMultiplierUpdate = ConstFeeMultiplier<FeeMultiplier>;
 }
 
-impl pallet_sudo::Config for Runtime{
+impl pallet_sudo::Config for Runtime {
     type RuntimeEvent = RuntimeEvent;
     type RuntimeCall = RuntimeCall;
-
 }
-
-pub struct Runtime where Block = Block, NodeBlock = opaque::Block, UncheckedExtrinsic = UncheckedExtrinsic{
-    
-    System: frame_system,
-    RandomnessCollectiveFlip: pallet_randomness_collective_flip,
-    Timestamp: pallet_timestamp,
-    Aura: pallet_aura,
-    Grandpa: pallet_grandpa,
-    Balances: pallet_balances,
-    TransactionPayment: pallet_transaction_payment,
-    Sudo: pallet_sudo,
-
-}
-
+construct_runtime!(
+    pub struct Runtime
+    where
+        Block = Block,
+        NodeBlock = opaque::Block,
+        UncheckedExtrinsic = UncheckedExtrinsic,
+    {
+        System: frame_system,
+        RandomnessCollectiveFlip: pallet_randomness_collective_flip,
+        Timestamp: pallet_timestamp,
+        Aura: pallet_aura,
+        Grandpa: pallet_grandpa,
+        Balances: pallet_balances,
+        TransactionPayment: pallet_transaction_payment,
+        Sudo: pallet_sudo,
+    }
+);
 pub type Address = sp_runtime::MultiAddress<AccountId, ()>;
 pub type Header = generic::Header<BlockNumber, BlakeTwo256>;
 pub type Block = generic::Block<Header, UncheckedExtrinsic>;
@@ -183,22 +212,27 @@ pub type SignedExtra = (
     frame_system::CheckEra<Runtime>,
     frame_system::CheckNonce<Runtime>,
     frame_system::CheckWeight<Runtime>,
-    pallet_transaction_payment::ChargeTransactionPayment<Runtime>
+    pallet_transaction_payment::ChargeTransactionPayment<Runtime>,
 );
 
-pub type UncheckedExtrinsic = generic::UncheckedExtrinsic<Address, RuntimeCall, Signature, SignedExtra>;
+pub type UncheckedExtrinsic =
+    generic::UncheckedExtrinsic<Address, RuntimeCall, Signature, SignedExtra>;
 pub type SignedPayload = generic::SignedPayload<RuntimeCall, SignedExtra>;
-pub type Executive = frame_executive::Executive<Runtime, Block, frame_system::ChainContext<Runtime>, Runtime, AllPalletsWithSystem>;
+pub type Executive = frame_executive::Executive<
+    Runtime,
+    Block,
+    frame_system::ChainContext<Runtime>,
+    Runtime,
+    AllPalletsWithSystem,
+>;
 
 impl sp_api::Core<Block> for Runtime {
-    fn version() -> RuntimeVersion {
-        
-    }
+    fn version() -> RuntimeVersion {}
 
-    fn execute_block(block:Block) {
+    fn execute_block(block: Block) {
         Executive::execute_block(block);
     }
-    fn initialize_block(header: & <Block as BlockT> ::Header) {
+    fn initialize_block(header: &<Block as BlockT>::Header) {
         Executive::initialize_block(header)
     }
 }
@@ -209,91 +243,118 @@ impl sp_api::Metadata<Block> for Runtime {
     }
 }
 
-impl sp_block_builder::BlockBuilder<Block> for Runtime{
-    fn apply_extrinsic(extrinsic: <Block as BlockT> ::Extrinsic) -> ApplyExtrinsicResult{
+impl sp_block_builder::BlockBuilder<Block> for Runtime {
+    fn apply_extrinsic(extrinsic: <Block as BlockT>::Extrinsic) -> ApplyExtrinsicResult {
         Executive::apply_extrinsic(extrinsic)
     }
-    fn finalize_block() -> <Block as BlockT>::Header{
+    fn finalize_block() -> <Block as BlockT>::Header {
         Executive::finalize_block()
     }
 
-    fn inherent_extrinsics(data: sp_inherents:: InherentData) ->Vec<<Block as BlockT>::Extrinsic>{
+    fn inherent_extrinsics(data: sp_inherents::InherentData) -> Vec<<Block as BlockT>::Extrinsic> {
         data.create_extrinsics()
     }
-    fn check_inherents(block:Block,data:sp_inherents::InherentData) -> sp_inherents::CheckInherentsResult {
+    fn check_inherents(
+        block: Block,
+        data: sp_inherents::InherentData,
+    ) -> sp_inherents::CheckInherentsResult {
         data.check_extrinsics(&block)
     }
 }
 
-impl sp_transaction_pool::runtime_api::TaggedTransactionQueue<Block> for Runtime{
-    fn validate_transaction(source:TransactionSource,tx: <Block as BlockT> ::Extrinsic,block_hash:<Block  as  BlockT>::Hash,) -> TransactionValidity {
+impl sp_transaction_pool::runtime_api::TaggedTransactionQueue<Block> for Runtime {
+    fn validate_transaction(
+        source: TransactionSource,
+        tx: <Block as BlockT>::Extrinsic,
+        block_hash: <Block as BlockT>::Hash,
+    ) -> TransactionValidity {
         Executive::validate_transaction(source, tx, block_hash)
     }
 }
 
-impl sp_offchain::OffchainWorkerApi<Block> for Runtime{
-    fn offchain_worker(header: &<Block  as  BlockT>::Header) {
+impl sp_offchain::OffchainWorkerApi<Block> for Runtime {
+    fn offchain_worker(header: &<Block as BlockT>::Header) {
         Executive::offchain_worker(header)
     }
 }
 
-impl sp_consensus_aura::AuraApi<Block, AuraId> for Runtime{
-    fn slot_duration() -> sp_consensus_aura::SlotDuration{
+impl sp_consensus_aura::AuraApi<Block, AuraId> for Runtime {
+    fn slot_duration() -> sp_consensus_aura::SlotDuration {
         sp_consensus_aura::SlotDuration::from_millis(Aura::slot_duration())
     }
-    fn authorities()-> Vec<AuraId>{
+    fn authorities() -> Vec<AuraId> {
         Aura::authorities().into_inner()
     }
 }
 
-impl sp_session::SessionKeys<Block> for Runtime{
-    fn generate_session_keys(seed:Option<Vec<u8> >) -> Vec<u8> {
-        
-    }
+impl sp_session::SessionKeys<Block> for Runtime {
+    fn generate_session_keys(seed: Option<Vec<u8>>) -> Vec<u8> {}
 
-    fn decode_session_keys(encoded:Vec<u8>) -> Option<Vec<(Vec<u8>, KeyTypeId)>> {
-        
-    }
+    fn decode_session_keys(encoded: Vec<u8>) -> Option<Vec<(Vec<u8>, KeyTypeId)>> {}
 }
 
-impl fg_primitives::GrandpaApi<Block> for Runtime{
+impl fg_primitives::GrandpaApi<Block> for Runtime {
     fn grandpa_authorities() -> GrandpaAuthorityList {
         Grandpa::grandpa_authorities()
     }
-    fn current_set_id() -> fg_primitives::SetId{
+    fn current_set_id() -> fg_primitives::SetId {
         Grandpa::current_set_id()
     }
-    fn submit_report_equivocation_unsigned_extrinsic(equivocation_proof:fg_primitives::EquivocationProof<<Block  as  BlockT>::Hash,NumberFor<Block> > ,key_owner_proof:fg_primitives::OpaqueKeyOwnershipProof,) -> Option<()> {
+    fn submit_report_equivocation_unsigned_extrinsic(
+        equivocation_proof: fg_primitives::EquivocationProof<
+            <Block as BlockT>::Hash,
+            NumberFor<Block>,
+        >,
+        key_owner_proof: fg_primitives::OpaqueKeyOwnershipProof,
+    ) -> Option<()> {
         None
     }
-    fn generate_key_ownership_proof(set_id:fg_primitives::SetId,authority_id:GrandpaId,) -> Option<fg_primitives::OpaqueKeyOwnershipProof> {
+    fn generate_key_ownership_proof(
+        set_id: fg_primitives::SetId,
+        authority_id: GrandpaId,
+    ) -> Option<fg_primitives::OpaqueKeyOwnershipProof> {
         None
     }
 }
 
-impl frame_system_rpc_runtime_api::AccountNonceApi<Block, AccountId, Index> for Runtime{
-    fn account_nonce(account: AccountId)-> Index{
+impl frame_system_rpc_runtime_api::AccountNonceApi<Block, AccountId, Index> for Runtime {
+    fn account_nonce(account: AccountId) -> Index {
         System::account_nonce(account)
     }
 }
 
-impl pallet_transaction_payment_rpc_runtime_api::TransactionPaymentApi<Block, Balance> for Runtime{
-    fn query_info(uxt: <Block as BlockT>::Extrinsic, len: u32)-> pallet_transaction_payment_rpc_runtime_api::RuntimeDispatchInfo<Balance>{
+impl pallet_transaction_payment_rpc_runtime_api::TransactionPaymentApi<Block, Balance> for Runtime {
+    fn query_info(
+        uxt: <Block as BlockT>::Extrinsic,
+        len: u32,
+    ) -> pallet_transaction_payment_rpc_runtime_api::RuntimeDispatchInfo<Balance> {
         TransactionPayment::query_info(uxt, len)
     }
-    fn query_fee_details(uxt: <Block as BlockT>::Extrinsic, len: u32)-> pallet_transaction_payment::FeeDetails<Balance>{
+    fn query_fee_details(
+        uxt: <Block as BlockT>::Extrinsic,
+        len: u32,
+    ) -> pallet_transaction_payment::FeeDetails<Balance> {
         TransactionPayment::query_fee_details(uxt, len)
     }
 }
 
-impl pallet_transaction_payment_rpc_runtime_api::TransactionPaymentCallApi<Block, Balance, RuntimeCall> for Runtime{
-    fn query_call_info(call: RuntimeCall, len: u32)-> pallet_transaction_payment::RuntimeDispatchInfo<Balance>{
+impl
+    pallet_transaction_payment_rpc_runtime_api::TransactionPaymentCallApi<
+        Block,
+        Balance,
+        RuntimeCall,
+    > for Runtime
+{
+    fn query_call_info(
+        call: RuntimeCall,
+        len: u32,
+    ) -> pallet_transaction_payment::RuntimeDispatchInfo<Balance> {
         TransactionPayment::query_call_info(call, len)
     }
-    fn query_call_fee_details(call: RuntimeCall, len: u32)-> pallet_transaction_payment::FeeDetails<Balance>{
+    fn query_call_fee_details(
+        call: RuntimeCall,
+        len: u32,
+    ) -> pallet_transaction_payment::FeeDetails<Balance> {
         TransactionPayment::query_call_fee_details(call, len)
     }
 }
-
-
-
